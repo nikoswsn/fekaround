@@ -1,10 +1,10 @@
 
 
-def mkdir_if_none(path):
+def mkdir_if_none(dir_path):
     '''Create directory if it doesn't exist'''
     from os import path, makedirs
-    if not path.exists(path):
-        makedirs(path)
+    if not path.exists(dir_path):
+        makedirs(dir_path)
         
 
 def dir_ls(dir_path):

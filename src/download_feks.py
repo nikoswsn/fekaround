@@ -15,7 +15,6 @@ INPUT_FILE = OUTPUT_DIR / 'api_fek_retrieval_2024.json'
 
 # Directory to save downloaded PDFs
 output_dir = OUTPUT_DIR / 'pdfs'
-
 mkdir_if_none(output_dir)
 
 
