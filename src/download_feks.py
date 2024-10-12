@@ -27,7 +27,7 @@ chrome_options.add_argument("--disable-search-engine-choice-screen")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 
-def download_pdf(url):
+def download_pdf(url,fek_type):
     try:
         # Send a GET request to fetch the FEK Page
         response = re.get(url)
@@ -35,7 +35,9 @@ def download_pdf(url):
         
         # Extract the file name from the URL
         file_name = url.split("/")[-1]
-        file_path = os.path.join(output_dir, file_name)
+        dir_path = os.path.join(output_dir, fek_type)
+        mkdir_if_none(dir_path)
+        file_path = os.path.join(dir_path, file_name)
 
         # Write the PDF to a local file
         with open(file_path, 'wb') as pdf_file:
@@ -64,25 +66,36 @@ def get_fek_pdf_url(fek_id):
 
 
 
-def retrieve_fek(fek_id):
+def retrieve_fek(fek_id,fek_type):
     '''Finds the FEK pdf and downloads it'''
     pdf_url = get_fek_pdf_url(fek_id)
     if not pdf_url:
         print('fek not found')
         return
     
-    download_pdf(pdf_url)
+    download_pdf(pdf_url,fek_type)
 
 
 
-
+def parseFekType(fek):
+    try:
+        fek_type = fek.get('search_PrimaryLabel')
+        fek_type = fek_type.split(' ')[0]
+    except:
+        fek_type = 'unknown_fek'
+    finally:
+        return fek_type
 
 if __name__ == '__main__':
     feks = load_json_data(INPUT_FILE)
     try:
         for fek in feks:
             fek_id = fek.get('search_ID')
-            retrieve_fek(fek_id)
+            fek_type = parseFekType(fek)
+            if fek_type != 'Α':
+                #TODO also check if already downloaded
+                continue
+            retrieve_fek(fek_id,fek_type)
     finally:
         driver.quit()
     
