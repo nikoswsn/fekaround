@@ -1,3 +1,4 @@
+from settings import OUTPUT_DIR
 
 
 def mkdir_if_none(dir_path):
@@ -31,3 +32,24 @@ def load_json_data(filepath):
         print(f"Error: File '{filepath}' is not a valid JSON.")
     except Exception as e:
         print(f"An error occurred: {e}")
+        
+def save_as_json(obj, path):
+    import json
+    with open(path, 'w', encoding="utf-8") as json_file:
+        json.dump(obj, json_file, ensure_ascii=False, indent=2)
+        
+def read_txt(relative_path):
+    '''Returns content of a .txt file'''
+    with open(OUTPUT_DIR / relative_path, 'r') as f:
+        content = f.read()
+    return content
+
+def read_txt_lines(relative_path):
+    '''Returns lines of a .txt file'''
+    with open(OUTPUT_DIR / relative_path, 'r') as f:
+        lines = f.readlines()
+    return lines
+
+def save_txt(txt, relative_path):
+    with open(OUTPUT_DIR / relative_path, "w") as file:
+        file.write(txt)
